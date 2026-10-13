@@ -7,7 +7,7 @@ function buildPool() {
   return shuffle(mcqBank).map(prepareMcq)
 }
 
-function WalkToMosque({ setMosqueDone, onBack, onRestart }) {
+function WalkToMosque({ setMosqueDone, onBack, onRestart, round }) {
   const mountRef = useRef(null)
   const engineRef = useRef(null)
   const sceneRef = useRef(null)
@@ -26,6 +26,18 @@ function WalkToMosque({ setMosqueDone, onBack, onRestart }) {
   const [muted, setMuted] = useState(isMuted())
   const [isFull, setIsFull] = useState(false)
   const [mustRotate, setMustRotate] = useState(false)
+  const [prevRound, setPrevRound] = useState(round)
+
+  if (round !== prevRound) {
+    setPrevRound(round)
+    setQuestion(null)
+    setStation(0)
+    setAnswerState(null)
+    setPicked(null)
+    setWon(false)
+    setIntro(true)
+    setFlash(null)
+  }
 
   useEffect(() => {
     poolRef.current = buildPool()
@@ -62,7 +74,7 @@ function WalkToMosque({ setMosqueDone, onBack, onRestart }) {
       engine.dispose()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [round])
 
   useEffect(() => {
     const handler = () => setIsFull(!!document.fullscreenElement)
@@ -287,16 +299,13 @@ export default function MosqueGameScreen({ setMosqueDone, onNavigate }) {
         <h2 className="screen__title">🕌 الرحلة إلى المسجد</h2>
       </div>
       <WalkToMosque
-        key={round}
+        round={round}
         setMosqueDone={setMosqueDone}
         onBack={() => {
           if (document.fullscreenElement) document.exitFullscreen?.()
           onNavigate('home')
         }}
-        onRestart={() => {
-          if (document.fullscreenElement) document.exitFullscreen?.()
-          setRound((r) => r + 1)
-        }}
+        onRestart={() => setRound((r) => r + 1)}
       />
     </div>
   )
