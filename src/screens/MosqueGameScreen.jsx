@@ -25,6 +25,7 @@ function WalkToMosque({ setMosqueDone, onBack, onRestart }) {
   const [flash, setFlash] = useState(null)
   const [muted, setMuted] = useState(isMuted())
   const [isFull, setIsFull] = useState(false)
+  const [mustRotate, setMustRotate] = useState(false)
 
   useEffect(() => {
     poolRef.current = buildPool()
@@ -67,6 +68,21 @@ function WalkToMosque({ setMosqueDone, onBack, onRestart }) {
     const handler = () => setIsFull(!!document.fullscreenElement)
     document.addEventListener('fullscreenchange', handler)
     return () => document.removeEventListener('fullscreenchange', handler)
+  }, [])
+
+  useEffect(() => {
+    const update = () => {
+      const portrait = window.matchMedia('(orientation: portrait)').matches
+      const touch = window.matchMedia('(pointer: coarse)').matches
+      setMustRotate(portrait && (touch || window.innerWidth < 900))
+    }
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('orientationchange', update)
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('orientationchange', update)
+    }
   }, [])
 
   function pulse(kind) {
@@ -248,6 +264,15 @@ function WalkToMosque({ setMosqueDone, onBack, onRestart }) {
               </button>
             </div>
           </section>
+        </div>
+      )}
+
+      {mustRotate && (
+        <div className="game-rotate" role="alertdialog" aria-live="polite">
+          <div className="game-rotate__icon" aria-hidden="true">
+            📱
+          </div>
+          <p className="game-rotate__text">أدر جهازك أفقيًا لتشغيل الرحلة إلى المسجد</p>
         </div>
       )}
     </div>

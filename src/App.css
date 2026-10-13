@@ -966,6 +966,44 @@
   z-index: 2;
 }
 
+.game-rotate {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(160deg, #0f2b45, #12456c);
+}
+
+.game-rotate__icon {
+  font-size: 58px;
+  animation: rotateHint 1.8s ease-in-out infinite;
+}
+
+.game-rotate__text {
+  margin: 0;
+  max-width: 340px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.9;
+}
+
+@keyframes rotateHint {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+}
+
 .game-flash {
   position: absolute;
   inset: 0;
