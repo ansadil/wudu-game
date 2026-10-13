@@ -20,7 +20,10 @@ if (!existsSync(dist)) {
 
 const staging = mkdtempSync(join(tmpdir(), 'wudu-deploy-'))
 console.log('▶ Preparing deploy in', staging)
-cpSync(dist, staging, { recursive: true })
+cpSync(dist, staging, {
+  recursive: true,
+  filter: (src) => !/[\\/]\.git([\\/]|$)/.test(src),
+})
 writeFileSync(join(staging, '.nojekyll'), '')
 
 const stamp = new Date().toISOString()
