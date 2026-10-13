@@ -289,8 +289,14 @@ export default function MosqueGameScreen({ setMosqueDone, onNavigate }) {
       <WalkToMosque
         key={round}
         setMosqueDone={setMosqueDone}
-        onBack={() => onNavigate('home')}
-        onRestart={() => setRound((r) => r + 1)}
+        onBack={() => {
+          if (document.fullscreenElement) document.exitFullscreen?.()
+          onNavigate('home')
+        }}
+        onRestart={() => {
+          if (document.fullscreenElement) document.exitFullscreen?.()
+          setRound((r) => r + 1)
+        }}
       />
     </div>
   )
